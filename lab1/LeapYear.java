@@ -6,13 +6,13 @@ public class LeapYear {
     /** Method that takes year, checks if it is a leap year, and returns boolean */
     public static boolean isLeapYear(int year){
         if (year%4 !=0){
-            return False;
+            return false;
         }
         if (year%400 !=0) {
-            return False;
+            return false;
         }
         else{
-            return True;
+            return true;
         }
     }
 
