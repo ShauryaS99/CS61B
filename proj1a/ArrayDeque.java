@@ -17,7 +17,7 @@ public class ArrayDeque<T> {
 
 
     //reorganizes deque for resizing
-    public void reorganize() {
+    private void reorganize() {
         T[] t = (T []) new Object[items.length];
         int pointerfirst = nextFirst + 1;
         if (pointerfirst > items.length) {
@@ -98,15 +98,20 @@ public class ArrayDeque<T> {
         if (isEmpty()) {
             return null;
         }
+        if (nextFirst >= items.length - 1) {
+            nextFirst = 0;
+            T x = items[nextFirst];
+            items[nextFirst] = null;
+            size--;
+            nextFirst++;
+            return x;
+        }
         T x = items[nextFirst + 1];
         items[nextFirst + 1] = null;
         size--;
         nextFirst++;
         if (size < 0.25 * items.length && items.length >= 16) {
             resize(items.length / 2);
-        }
-        if (nextFirst > items.length) {
-            nextFirst = nextFirst - items.length;
         }
         return x;
     }
@@ -116,6 +121,9 @@ public class ArrayDeque<T> {
         if (isEmpty()) {
             return null;
         }
+        if (nextLast <= 0) {
+            nextLast = items.length;
+        }
         T x = items[nextLast - 1];
         items[nextLast - 1] = null;
         size--;
@@ -123,15 +131,9 @@ public class ArrayDeque<T> {
         if (size < 0.25 * items.length && items.length >= 16) {
             resize(items.length / 2);
         }
-        if (nextLast < 0) {
-            nextLast = items.length-1;
-        }
         return x;
     }
 
-    public T getLast() {
-        return items[size - 1];
-    }
 
     public T get(int index) {
         int numberget = nextFirst + 1 + index; //formula for getting values
@@ -146,16 +148,6 @@ public class ArrayDeque<T> {
 
     public int size() {
         return size;
-    }
-
-
-    public static void main(String[] args) {
-        ArrayDeque p = new ArrayDeque();
-        p.addFirst(1);
-        p.addFirst(2);
-        p.addFirst(3);
-        p.addFirst(4);
-        p.removeFirst();
     }
 
 }

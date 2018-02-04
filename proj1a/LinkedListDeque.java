@@ -36,11 +36,6 @@ public class LinkedListDeque<T> {
         size += 1;
     }
 
-    /** Returns the first item in the list. */
-    public T getFirst() {
-        return sentinel.next.item;
-    }
-
     /** Adds an item to the end of the list. */
     public void addLast(T x) {
         if (size < 1) {
@@ -122,7 +117,7 @@ public class LinkedListDeque<T> {
         return helper(sentinelcopy.next, index);
     }
 
-    public T helper(Node sentinelcopy, int index) {
+    private T helper(Node sentinelcopy, int index) {
         if (index >= size || index < 0) {
             return null;
         } else if (index == 0) {
@@ -131,7 +126,4 @@ public class LinkedListDeque<T> {
         return helper(sentinelcopy.next, index - 1);
     }
 
-    public static void main(String[] args) {
-
-    }
 }
