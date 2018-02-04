@@ -21,14 +21,6 @@ public class LinkedListDeque<Gen> {
         size = 0;
     }
 
-    /**DLList with one element
-     public LinkedListDeque(int x){
-     sentinel = new IntNode(sentinel,1,sentinel);
-     sentinel.next = new IntNode(sentinel.prev, x, null);
-     sentinel.prev = new IntNode(null,x, sentinel.next);
-     size = 1;
-     }*/
-    /** Adds x to the front of the list. */
     public void addFirst(Gen x) {
 
         if(size<1){
@@ -72,29 +64,9 @@ public class LinkedListDeque<Gen> {
             sentinel.prev.prev = sentinel.prev.prev.prev.next;
         }
         size += 1;
-        /**IntNode p = sentinel;
-
-         //Move p until it reaches the end of the list.
-        while (p.next != null) {
-            if (p.item == p.next.item){ //if items are the same will fail
-                break;
-            }
-
-            p = p.next;
-
-        }
-        p.prev = new IntNode(sentinel.prev, x,sentinel.next);
-        p.next = new IntNode(sentinel.prev, x, sentinel); */
     }
 
-    /**public int getLast(){
-     IntNode p = sentinel;
-     while (p.next != null) {
-     p = p.next;
-     }
 
-     return p.next;
-     }*/
     public  boolean isEmpty(){
         if (size==0){
             return true;
@@ -103,7 +75,7 @@ public class LinkedListDeque<Gen> {
     public int size() {
         return size;
     }
-    public void printDeque(){ //might be flagged b/c it is destructive
+    public void printDeque(){
         Node sentinelcopy = sentinel;
         while(size!=0){
             System.out.print(sentinelcopy.next.item + " ");

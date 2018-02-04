@@ -15,10 +15,31 @@ public class ArrayDeque<Obj> {
 
     }
 
+
+    //reorganizes deque for resizing
+    public void reorganize() {
+        Obj[] t = (Obj []) new Object[items.length];
+        int pointerfirst= nextFirst+1;
+        for (int i = 0; items.length>i; i++) {
+            t[i] = items[pointerfirst];
+            pointerfirst++;
+            if (pointerfirst ==items.length) {
+                pointerfirst= 0;
+            }
+
+        }
+        this.items = t;
+
+    }
+    //resizes array
+    //@source andrew helped me understand concept behind resizing
     private void resize(int capacity) {
         Obj[] a = (Obj []) new Object[capacity];
+        reorganize();
         System.arraycopy(items, 0, a, 0, size);
         items = a;
+        nextFirst = items.length-1;
+        nextLast = size;
 
     }
 
@@ -56,14 +77,14 @@ public class ArrayDeque<Obj> {
     }
 
     public void printDeque(){
-        int startingpoint = nextFirst;
+        int startingpoint = nextFirst+1;
         while(items.length != startingpoint) {
             System.out.print(items[startingpoint] + " ");
             startingpoint++;
             if (startingpoint == items.length) {
                 startingpoint =0;
             }
-            if (startingpoint == nextFirst) {
+            if (startingpoint == nextFirst+1) {
                 break;
             }
         }
@@ -74,9 +95,31 @@ public class ArrayDeque<Obj> {
             return null;
         }
         Obj x = items[nextFirst];
+        items[nextFirst] = null;
         size--;
+        nextFirst++;
         if (size < 0.25*items.length && items.length>=16) {
-            resize(size/2);
+            resize(items.length/2);
+        }
+        if (nextFirst>items.length) {
+            nextFirst= nextFirst-items.length;
+        }
+        return x;
+    }
+
+
+    public Obj removeLast() {
+        if (isEmpty()){
+            return null;
+        }
+        Obj x = getLast();
+        size--;
+        nextLast--;
+        if (size < 0.25*items.length && items.length>=16) {
+            resize(items.length/2);
+        }
+        if (nextLast==0) {
+            nextLast= items.length-1;
         }
         return x;
     }
@@ -86,7 +129,13 @@ public class ArrayDeque<Obj> {
     }
 
     public Obj get(int index) {
-        
+        int numberget = nextFirst+1+index; //formula for getting values
+        if (index> items.length-1 && index<0) {
+            return null;
+        }
+        if ((nextFirst + 1 + index)>items.length) {
+            return items[numberget-items.length];
+        }
         return items[nextFirst+1+index];
     }
 
@@ -94,19 +143,6 @@ public class ArrayDeque<Obj> {
         return size;
     }
 
-    /** Deletes item from back of the list and
-     * returns deleted item. */
-    public Obj removeLast() {
-        if (isEmpty()){
-            return null;
-        }
-        Obj x = getLast();
-        size--;
-        if (size < 0.25*items.length && items.length>=16) {
-            resize(size/2);
-        }
-        return x;
-    }
 
     public static void main(String[] args){
 
