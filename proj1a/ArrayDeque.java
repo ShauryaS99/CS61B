@@ -51,6 +51,10 @@ public class ArrayDeque<T> {
         if (size == items.length) {
             resize(size * 2);
         }
+
+        if (nextFirst == items.length) {
+            nextFirst = 0;
+        }
         if (nextFirst < 0) {
             nextFirst = items.length - 1; //sets first element to the back of the array
         }
@@ -65,7 +69,10 @@ public class ArrayDeque<T> {
         if (size == items.length) {
             resize(size * 2);
         }
-        if (nextLast == items.length) {
+        if (nextLast < 0) {
+            nextLast = items.length - 1;
+        }
+        if (nextLast == items.length - 1) {
             nextLast = 0; //sets nextLast element to the front of the array
         }
         items[nextLast] = x;
@@ -99,12 +106,7 @@ public class ArrayDeque<T> {
             return null;
         }
         if (nextFirst >= items.length - 1) {
-            nextFirst = 0;
-            T x = items[nextFirst];
-            items[nextFirst] = null;
-            size--;
-            nextFirst++;
-            return x;
+            nextFirst = -1;
         }
         T x = items[nextFirst + 1];
         items[nextFirst + 1] = null;
