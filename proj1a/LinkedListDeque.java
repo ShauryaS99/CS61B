@@ -1,11 +1,11 @@
-public class LinkedListDeque<Gen> {
+public class LinkedListDeque<T> {
     //make sure to implement generic structures
     private class Node {
         private Node prev;
-        private Gen item;
+        private T item;
         private Node next;
 
-        Node(Node p, Gen i, Node n) {
+        Node(Node p, T i, Node n) {
             item = i;
             next = n;
             prev = p;
@@ -21,7 +21,7 @@ public class LinkedListDeque<Gen> {
         size = 0;
     }
 
-    public void addFirst(Gen x) {
+    public void addFirst(T x) {
 
         if (size < 1) {
             sentinel.next = new Node(sentinel.prev, x, sentinel.next);
@@ -37,12 +37,12 @@ public class LinkedListDeque<Gen> {
     }
 
     /** Returns the first item in the list. */
-    public Gen getFirst() {
+    public T getFirst() {
         return sentinel.next.item;
     }
 
     /** Adds an item to the end of the list. */
-    public void addLast(Gen x) {
+    public void addLast(T x) {
         if (size < 1) {
             sentinel.next = new Node(sentinel.prev, x, sentinel.next);
             sentinel.prev = sentinel.next;
@@ -79,11 +79,11 @@ public class LinkedListDeque<Gen> {
         }
     }
 
-    public Gen removeFirst() {
+    public T removeFirst() {
         if (isEmpty()) {
             return null;
         } else {
-            Gen x = sentinel.next.item;
+            T x = sentinel.next.item;
             sentinel.next = sentinel.next.next;
             sentinel.next.prev = sentinel;
             size--;
@@ -91,11 +91,11 @@ public class LinkedListDeque<Gen> {
         }
     }
 
-    public Gen removeLast() {
+    public T removeLast() {
         if (isEmpty()) {
             return null;
         } else {
-            Gen x = sentinel.prev.item;
+            T x = sentinel.prev.item;
             sentinel.prev = sentinel.prev.prev;
             sentinel.prev.next = sentinel;
             size--;
@@ -103,7 +103,7 @@ public class LinkedListDeque<Gen> {
         }
     }
 
-    public Gen get(int index) {
+    public T get(int index) {
         int x = 0;
         Node sentinelcopy = sentinel;
         if (index >= size || index < 0) {
@@ -117,12 +117,12 @@ public class LinkedListDeque<Gen> {
         }
     }
 
-    public Gen getRecursive(int index) {
+    public T getRecursive(int index) {
         Node sentinelcopy = sentinel;
         return helper(sentinelcopy.next, index);
     }
 
-    public Gen helper(Node sentinelcopy, int index) {
+    public T helper(Node sentinelcopy, int index) {
         if (index >= size || index < 0) {
             return null;
         } else if (index == 0) {

@@ -1,12 +1,12 @@
-public class ArrayDeque<Obj> {
-    private Obj[] items;
+public class ArrayDeque<T> {
+    private T[] items;
     private int size;
 
     private int nextFirst;
     private int nextLast;
 
     public ArrayDeque() {
-        items = (Obj []) new Object[8];
+        items = (T []) new Object[8];
         size = 0;
 
         nextFirst = 0;
@@ -18,12 +18,15 @@ public class ArrayDeque<Obj> {
 
     //reorganizes deque for resizing
     public void reorganize() {
-        Obj[] t = (Obj []) new Object[items.length];
+        T[] t = (T []) new Object[items.length];
         int pointerfirst = nextFirst + 1;
+        if (pointerfirst > items.length) {
+            pointerfirst = 0;
+        }
         for (int i = 0; items.length > i; i++) {
             t[i] = items[pointerfirst];
             pointerfirst++;
-            if (pointerfirst == items.length) {
+            if (pointerfirst >= items.length) {
                 pointerfirst = 0;
             }
 
@@ -34,7 +37,8 @@ public class ArrayDeque<Obj> {
     //resizes array
     //@source andrew helped me understand concept behind resizing
     private void resize(int capacity) {
-        Obj[] a = (Obj []) new Object[capacity];
+
+        T[] a = (T []) new Object[capacity];
         reorganize();
         System.arraycopy(items, 0, a, 0, size);
         items = a;
@@ -43,12 +47,12 @@ public class ArrayDeque<Obj> {
 
     }
 
-    public void addFirst(Obj x) {
+    public void addFirst(T x) {
         if (size == items.length) {
             resize(size * 2);
         }
         if (nextFirst < 0) {
-            nextFirst = nextFirst + items.length - 1; //sets first element to the back of the array
+            nextFirst = items.length - 1; //sets first element to the back of the array
         }
         items[nextFirst] = x;
         nextFirst--;
@@ -57,7 +61,7 @@ public class ArrayDeque<Obj> {
 
 
 
-    public void addLast(Obj x) {
+    public void addLast(T x) {
         if (size == items.length) {
             resize(size * 2);
         }
@@ -90,12 +94,12 @@ public class ArrayDeque<Obj> {
         }
     }
 
-    public Obj removeFirst() {
+    public T removeFirst() {
         if (isEmpty()) {
             return null;
         }
-        Obj x = items[nextFirst];
-        items[nextFirst] = null;
+        T x = items[nextFirst + 1];
+        items[nextFirst + 1] = null;
         size--;
         nextFirst++;
         if (size < 0.25 * items.length && items.length >= 16) {
@@ -108,27 +112,28 @@ public class ArrayDeque<Obj> {
     }
 
 
-    public Obj removeLast() {
+    public T removeLast() {
         if (isEmpty()) {
             return null;
         }
-        Obj x = getLast();
+        T x = items[nextLast - 1];
+        items[nextLast - 1] = null;
         size--;
         nextLast--;
         if (size < 0.25 * items.length && items.length >= 16) {
             resize(items.length / 2);
         }
-        if (nextLast == 0) {
-            nextLast = items.length - 1;
+        if (nextLast < 0) {
+            nextLast = items.length-1;
         }
         return x;
     }
 
-    public Obj getLast() {
+    public T getLast() {
         return items[size - 1];
     }
 
-    public Obj get(int index) {
+    public T get(int index) {
         int numberget = nextFirst + 1 + index; //formula for getting values
         if (index > items.length - 1 && index < 0) {
             return null;
@@ -145,7 +150,12 @@ public class ArrayDeque<Obj> {
 
 
     public static void main(String[] args) {
-
+        ArrayDeque p = new ArrayDeque();
+        p.addFirst(1);
+        p.addFirst(2);
+        p.addFirst(3);
+        p.addFirst(4);
+        p.removeFirst();
     }
 
 }
