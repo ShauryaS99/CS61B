@@ -19,12 +19,12 @@ public class ArrayDeque<Obj> {
     //reorganizes deque for resizing
     public void reorganize() {
         Obj[] t = (Obj []) new Object[items.length];
-        int pointerfirst= nextFirst+1;
-        for (int i = 0; items.length>i; i++) {
+        int pointerfirst = nextFirst + 1;
+        for (int i = 0; items.length > i; i++) {
             t[i] = items[pointerfirst];
             pointerfirst++;
-            if (pointerfirst ==items.length) {
-                pointerfirst= 0;
+            if (pointerfirst == items.length) {
+                pointerfirst = 0;
             }
 
         }
@@ -38,17 +38,17 @@ public class ArrayDeque<Obj> {
         reorganize();
         System.arraycopy(items, 0, a, 0, size);
         items = a;
-        nextFirst = items.length-1;
+        nextFirst = items.length - 1;
         nextLast = size;
 
     }
 
-    public void addFirst(Obj x){
+    public void addFirst(Obj x) {
         if (size == items.length) {
-            resize(size*2);
+            resize(size * 2);
         }
-        if (nextFirst<0) {
-            nextFirst = nextFirst + items.length-1; //sets first element to the back of the array
+        if (nextFirst < 0) {
+            nextFirst = nextFirst + items.length - 1; //sets first element to the back of the array
         }
         items[nextFirst] = x;
         nextFirst--;
@@ -59,9 +59,9 @@ public class ArrayDeque<Obj> {
 
     public void addLast(Obj x) {
         if (size == items.length) {
-            resize(size *2);
+            resize(size * 2);
         }
-        if (nextLast==items.length) {
+        if (nextLast == items.length) {
             nextLast = 0; //sets nextLast element to the front of the array
         }
         items[nextLast] = x;
@@ -69,57 +69,57 @@ public class ArrayDeque<Obj> {
         size++;
     }
 
-    public boolean isEmpty(){
-        if (size==0){
+    public boolean isEmpty() {
+        if (size == 0) {
             return true;
         }
         return false;
     }
 
-    public void printDeque(){
-        int startingpoint = nextFirst+1;
-        while(items.length != startingpoint) {
+    public void printDeque() {
+        int startingpoint = nextFirst + 1;
+        while (items.length != startingpoint) {
             System.out.print(items[startingpoint] + " ");
             startingpoint++;
             if (startingpoint == items.length) {
-                startingpoint =0;
+                startingpoint = 0;
             }
-            if (startingpoint == nextFirst+1) {
+            if (startingpoint == nextFirst + 1) {
                 break;
             }
         }
     }
 
-    public Obj removeFirst(){
-        if (isEmpty()){
+    public Obj removeFirst() {
+        if (isEmpty()) {
             return null;
         }
         Obj x = items[nextFirst];
         items[nextFirst] = null;
         size--;
         nextFirst++;
-        if (size < 0.25*items.length && items.length>=16) {
-            resize(items.length/2);
+        if (size < 0.25 * items.length && items.length >= 16) {
+            resize(items.length / 2);
         }
-        if (nextFirst>items.length) {
-            nextFirst= nextFirst-items.length;
+        if (nextFirst > items.length) {
+            nextFirst = nextFirst - items.length;
         }
         return x;
     }
 
 
     public Obj removeLast() {
-        if (isEmpty()){
+        if (isEmpty()) {
             return null;
         }
         Obj x = getLast();
         size--;
         nextLast--;
-        if (size < 0.25*items.length && items.length>=16) {
-            resize(items.length/2);
+        if (size < 0.25 * items.length && items.length >= 16) {
+            resize(items.length / 2);
         }
-        if (nextLast==0) {
-            nextLast= items.length-1;
+        if (nextLast == 0) {
+            nextLast = items.length - 1;
         }
         return x;
     }
@@ -129,14 +129,14 @@ public class ArrayDeque<Obj> {
     }
 
     public Obj get(int index) {
-        int numberget = nextFirst+1+index; //formula for getting values
-        if (index> items.length-1 && index<0) {
+        int numberget = nextFirst + 1 + index; //formula for getting values
+        if (index > items.length - 1 && index < 0) {
             return null;
         }
-        if ((nextFirst + 1 + index)>items.length) {
-            return items[numberget-items.length];
+        if ((nextFirst + 1 + index) > items.length) {
+            return items[numberget - items.length];
         }
-        return items[nextFirst+1+index];
+        return items[nextFirst + 1 + index];
     }
 
     public int size() {
@@ -144,7 +144,7 @@ public class ArrayDeque<Obj> {
     }
 
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
 
     }
 

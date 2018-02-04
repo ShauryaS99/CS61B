@@ -1,13 +1,13 @@
 public class LinkedListDeque<Gen> {
     //make sure to implement generic structures
-    private class Node{
-        public Node prev;
-        public Gen item;
-        public Node next;
+    private class Node {
+        private Node prev;
+        private Gen item;
+        private Node next;
 
-        public Node(Node p, Gen i, Node n){
-            item =i;
-            next =n;
+        Node(Node p, Gen i, Node n) {
+            item = i;
+            next = n;
             prev = p;
         }
     }
@@ -16,22 +16,19 @@ public class LinkedListDeque<Gen> {
     private int size;
 
     /**empty circular sentinel node*/
-    public LinkedListDeque(){
-        sentinel = new Node(sentinel,null,sentinel);
+    public LinkedListDeque() {
+        sentinel = new Node(sentinel, null, sentinel);
         size = 0;
     }
 
     public void addFirst(Gen x) {
 
-        if(size<1){
-
+        if (size < 1) {
             sentinel.next = new Node(sentinel.prev, x, sentinel.next);
             sentinel.prev = sentinel.next;
-            sentinel.prev.next= sentinel;
-            sentinel.prev.prev= sentinel.next.next;
-
-        }
-        else{
+            sentinel.prev.next = sentinel;
+            sentinel.prev.prev = sentinel.next.next;
+        } else {
             sentinel.next = new Node(sentinel.prev, x, sentinel.next);
             sentinel.next.next.prev = sentinel.next;
             sentinel.next.prev = sentinel.next;
@@ -46,19 +43,16 @@ public class LinkedListDeque<Gen> {
 
     /** Adds an item to the end of the list. */
     public void addLast(Gen x) {
-        if (size<1){
+        if (size < 1) {
             sentinel.next = new Node(sentinel.prev, x, sentinel.next);
             sentinel.prev = sentinel.next;
-            sentinel.prev.next= sentinel;
-            sentinel.prev.prev= sentinel.next.next;
-        }
-
-        else if (size<2){
+            sentinel.prev.next = sentinel;
+            sentinel.prev.prev = sentinel.next.next;
+        } else if (size < 2) {
             sentinel.prev = new Node(sentinel.next, x, sentinel);
             sentinel.next.next = sentinel.prev;
 
-        }
-        else {
+        } else {
             sentinel.prev = new Node(sentinel.prev, x, sentinel);
             sentinel.prev.prev.next = sentinel.prev;
             sentinel.prev.prev = sentinel.prev.prev.prev.next;
@@ -67,29 +61,28 @@ public class LinkedListDeque<Gen> {
     }
 
 
-    public  boolean isEmpty(){
-        if (size==0){
+    public  boolean isEmpty() {
+        if (size == 0) {
             return true;
-        }return false;
+        }
+        return false;
     }
     public int size() {
         return size;
     }
-    public void printDeque(){
+    public void printDeque() {
         Node sentinelcopy = sentinel;
-        while(size!=0){
+        while (size != 0) {
             System.out.print(sentinelcopy.next.item + " ");
             sentinelcopy = sentinelcopy.next;
             size--;
         }
     }
 
-    public Gen removeFirst(){
-        if (isEmpty()){
+    public Gen removeFirst() {
+        if (isEmpty()) {
             return null;
-
-        }
-        else{
+        } else {
             Gen x = sentinel.next.item;
             sentinel.next = sentinel.next.next;
             sentinel.next.prev = sentinel;
@@ -98,62 +91,47 @@ public class LinkedListDeque<Gen> {
         }
     }
 
-    public Gen removeLast(){
-        if (isEmpty()){
+    public Gen removeLast() {
+        if (isEmpty()) {
             return null;
-
-        }
-        else{
+        } else {
             Gen x = sentinel.prev.item;
             sentinel.prev = sentinel.prev.prev;
-            sentinel.prev.next= sentinel;
+            sentinel.prev.next = sentinel;
             size--;
             return x;
         }
     }
 
-    public Gen get(int index){
-        int x =0;
+    public Gen get(int index) {
+        int x = 0;
         Node sentinelcopy = sentinel;
-        if (index>= size || index<0){
-            return null;
-        }
-
-        else{
-            while( x <index){
-                sentinelcopy = sentinelcopy.next;
-                x++;
-
-            }
-            return sentinelcopy.next.item;
-
-        }
-    }
-
-
-    public Gen getRecursive(int index){
-
-        Node sentinelcopy = sentinel;
-        return helper(sentinelcopy.next,index);
-
-    }
-
-    public Gen helper(Node sentinelcopy,int index){
         if (index >= size || index < 0) {
             return null;
+        } else {
+            while (x < index) {
+                sentinelcopy = sentinelcopy.next;
+                x++;
+            }
+            return sentinelcopy.next.item;
         }
-        else if(index ==0){
-            return sentinelcopy.item;
-        }
-        return helper(sentinelcopy.next,index-1);
     }
 
-    public static void main(String[] args){
-        LinkedListDeque a = new LinkedListDeque();
-        a.addFirst(21);
-        a.addFirst(20);
-        a.addFirst(19);
-        a.addFirst(18);
-        System.out.println(a.getRecursive(2));
+    public Gen getRecursive(int index) {
+        Node sentinelcopy = sentinel;
+        return helper(sentinelcopy.next, index);
+    }
+
+    public Gen helper(Node sentinelcopy, int index) {
+        if (index >= size || index < 0) {
+            return null;
+        } else if (index == 0) {
+            return sentinelcopy.item;
+        }
+        return helper(sentinelcopy.next, index - 1);
+    }
+
+    public static void main(String[] args) {
+
     }
 }
