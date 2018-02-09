@@ -4,27 +4,28 @@ ArrayDeque:
 
 Q: Give an example of at least one idea from the staff solution that would have made your solution better (if any).
 
-A: 
+A: Using a final static variable for the intial size of the array would have been a good idea
+   Also their resizing method was less complicated, instead of reordering the array like I did they just copied it and moved the pointers
 
 Q: What's something you felt proud of in your code, if anything?
 
-A:
+A: Just working out how the deque's were supposed to work, brainstorming solutions and implementing them by myself.
 
 Q: What's something that was particularly inelegant in your code, if anything?
 
-A:
+A: My resize method
 
 Q: What did you learn by talking to your partner about writing ArrayDeque?
 
-A:
+A: It helps to run your ideas through TA's and lab assistants
 
 Q: What do you wish you would have known before writing ArrayDeque, if anything?
 
-A:
+A: Nothing
 
 Q: If you wrote ArrayDeque again, what would you do differently, if anything?
 
-A:
+A: My resize method to make it less convoluted and more effecient
 
 -----
 
@@ -32,27 +33,27 @@ LinkedListDeque:
 
 Q: Give an example of at least one idea from the staff solution that would have made your solution better (if any).
 
-A: 
+A: Nothing 
 
 Q: What's something you felt proud of in your code, if anything?
 
-A:
+A: Just working out how the deque's were supposed to work, brainstorming solutions and implementing them by myself correctly.
 
 Q: What's something that was particularly inelegant in your code, if anything?
 
-A:
+A: For my linked list it was pretty similar to the staff solution
 
 Q: What did you learn by talking to your partner about writing LinkedListDeque?
 
-A:
+A: He implemented tests for certain functions which may have been helpful
 
 Q: What do you wish you would have known before writing LinkedListDeque, if anything?
 
-A:
+A: Nothing
 
 Q: If you wrote LinkedListDeque again, what would you do differently, if anything?
 
-A:
+A: Not much, I may have written more tests
 
 -----
 
@@ -60,4 +61,4 @@ Meta:
 
 Q: Did you like this design review process? Anything we should do differently next time?
 
-A: 
+A: Maybe be a bit more clear and give more examples of the deques were supposed to work like how you did in the slides
