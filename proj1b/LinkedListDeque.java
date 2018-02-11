@@ -1,4 +1,4 @@
-public class LinkedListDeque<T> implements Deque<T>{
+public class LinkedListDeque<T> implements Deque<T> {
     //make sure to implement generic structures
     private class Node {
         private Node prev;
