@@ -5,13 +5,12 @@ public class Palindrome {
         Deque<Character> deque = new LinkedListDeque<Character>();
         if (word.length() <= 0) {
             return deque;
-        }
-        else {
+        } else {
             int index = 0;
             while (index < word.length()) {
                 char letter = word.charAt(index);
                 deque.addLast(letter);
-                index ++;
+                index++;
             }
             return deque;
         }
