@@ -41,7 +41,7 @@ public class ArrayRingBuffer<T> extends synthesizer.AbstractBoundedQueue<T> {
         if (last == capacity) {
             last = 0;
         }
-        last += 1; //may have to fix this
+        last += 1;
         fillCount += 1;
         //  Enqueue the item. Don't forget to increase fillCount and update last.
     }
@@ -95,9 +95,9 @@ public class ArrayRingBuffer<T> extends synthesizer.AbstractBoundedQueue<T> {
         }
 
         public T next() {
-            T returnVal = rb[index];
+            T returnValue = rb[index];
             index += 1;
-            return returnVal;
+            return returnValue;
         }
     }
 
