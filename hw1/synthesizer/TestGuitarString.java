@@ -4,7 +4,7 @@ package synthesizer;
 /* Don't worry too much about this, we'll get there in due time. */
 //import edu.princeton.cs.introcs.StdAudio;
 
-//import org.junit.Test;
+import org.junit.Test;
 import static org.junit.Assert.*;
 
 /** Tests the GuitarString class.
@@ -12,7 +12,7 @@ import static org.junit.Assert.*;
  */
 
 public class TestGuitarString {
-/*    @Test
+    /*@Test
     public void testPluckTheAString() {
         double CONCERT_A = 440.0;
         GuitarString aString = new GuitarString(CONCERT_A);
@@ -23,7 +23,7 @@ public class TestGuitarString {
         }
     }*/
 
-/*
+
     @Test
     public void testTic() {
         // Create a GuitarString of frequency 11025, which
@@ -52,7 +52,7 @@ public class TestGuitarString {
         assertEquals(expected, s5, 0.001);
 
     }
-*/
+
 
     /** Calls tests for GuitarString. */
     public static void main(String[] args) {
