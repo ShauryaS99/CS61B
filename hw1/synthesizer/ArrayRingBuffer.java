@@ -35,13 +35,13 @@ public class ArrayRingBuffer<T> extends synthesizer.AbstractBoundedQueue<T> {
      */
     public void enqueue(T x) {
         if (this.isFull()) {
-            throw new RuntimeException("Ring bugger overflow"); //throw runtime exception
+            throw new RuntimeException("Ring buffer overflow"); //throw runtime exception
         }
         rb[last] = x;
+        last += 1;
         if (last == capacity) {
             last = 0;
         }
-        last += 1;
         fillCount += 1;
         //  Enqueue the item. Don't forget to increase fillCount and update last.
     }
@@ -57,10 +57,10 @@ public class ArrayRingBuffer<T> extends synthesizer.AbstractBoundedQueue<T> {
         }
         T firstitem = rb[first];
         rb[first] = null;
+        first += 1;
         if (first == capacity) {
             first = 0;
         }
-        first += 1;
         fillCount -= 1;
         return  firstitem;
         // Dequeue the first item. Don't forget to decrease fillCount and update
@@ -71,7 +71,7 @@ public class ArrayRingBuffer<T> extends synthesizer.AbstractBoundedQueue<T> {
      */
     public T peek() {
         if (this.isEmpty()) {
-            throw new RuntimeException("Ring buffer underflow");
+            throw new RuntimeException("Ring buffer underflow"); //throw runtime exception
         }
         return rb[first];
         // Return the first item. None of your instance variables should change.
