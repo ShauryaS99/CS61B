@@ -22,7 +22,9 @@ public class PercolationStats {
             while (!p.percolates()) {
                 int randrow = StdRandom.uniform(N);
                 int randcol = StdRandom.uniform(N);
-                p.open(randrow, randcol);
+                if (!p.isOpen(randrow, randcol)) {
+                    p.open(randrow, randcol);
+                }
             }
             xt[i] = p.numberOfOpenSites() / (N * N);
         }

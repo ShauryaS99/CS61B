@@ -41,12 +41,13 @@ public class Percolation {
         if (row < 0 || row > length - 1 || col < 0 || col > length - 1) {
             throw new java.lang.IndexOutOfBoundsException();
         }
-
-        if (!(isOpen(row, col))) {
-            grid[row][col] = true;
+        if (isOpen(row, col)) {
+            return;
         }
-        int pos = xyTo1D(row, col);
 
+        grid[row][col] = true;
+        int pos = xyTo1D(row, col);
+        openblocks += 1;
     //connects top blocks to topsite and bottom blocks to bottom site
         if (row == 0) {
             wqu.union(pos, topsite);
@@ -103,15 +104,7 @@ public class Percolation {
 
     // number of open sites
     public int numberOfOpenSites() {
-        int numopen = 0;
-        for (int i = 0; i < length; i++) {
-            for (int j = 0; j < length; j++) {
-                if (isOpen(i, j)) {
-                    numopen += 1;
-                }
-            }
-        }
-        return numopen;
+        return openblocks;
     }
 
     // does the system percolate?
