@@ -9,6 +9,7 @@ public class Percolation {
     private WeightedQuickUnionUF wqu2;
     private int topsite;
     private int bottomsite;
+    private int openblocks;
 
     // create N-by-N grid, with all sites initially blocked
     public Percolation(int N) {
@@ -16,17 +17,21 @@ public class Percolation {
             throw new java.lang.IllegalArgumentException();
         }
         length = N;
+        openblocks = 0;
         grid = new boolean[length][length];
         wqu = new WeightedQuickUnionUF((length * length) + 2);
-        wqu2 = new WeightedQuickUnionUF((length * length) + 1);
+        wqu2 = new WeightedQuickUnionUF((length * length) + 2);
         topsite = (length * length); //sets topsite to 1 above max possible numbered block
         bottomsite = (length * length) + 1; //sets bottomsite to 2 above max possible numbered block
 
-
+        //  connect top
         for (int i = 0; i < length; i++) {
-            for (int j = 0; j < length; j++) {
-                grid[i][j] = false;
-            }
+            wqu2.union(topsite, i);
+        }
+
+        //  connect bottom
+        for (int j = length * (length - 1); j < length * length; j++) {
+            wqu.union(bottomsite, j);
         }
     }
 
@@ -46,31 +51,35 @@ public class Percolation {
         if (row == 0) {
             wqu.union(pos, topsite);
         } else if (row == length - 1) {
-            wqu.union(pos, bottomsite);
+            wqu2.union(pos, bottomsite);
         }
 
     //unions adj blocks if they are open
         if (row != length - 1 && isOpen(row + 1, col)) {
             int posdown = xyTo1D(row + 1, col);
             wqu.union(pos, posdown);
+            wqu2.union(pos, posdown);
         }
         if (row != 0 && isOpen(row - 1, col)) {
             int posup = xyTo1D(row - 1, col);
             wqu.union(pos, posup);
+            wqu2.union(pos, posup);
         }
         if (col != length - 1 && isOpen(row, col + 1)) {
             int posright = xyTo1D(row, col + 1);
             wqu.union(pos, posright);
+            wqu2.union(pos, posright);
         }
-        if (row != 0 && isOpen(row, col - 1)) {
+        if (col != 0 && isOpen(row, col - 1)) {
             int posleft = xyTo1D(row, col - 1);
             wqu.union(pos, posleft);
+            wqu2.union(pos, posleft);
         }
 
     }
 
     //changes xy coordinates to 1Dimensional coordinates
-    public int xyTo1D(int r, int c) {
+    private int xyTo1D(int r, int c) {
         int xy = (r * length) + c;
         return xy;
     }
@@ -86,7 +95,7 @@ public class Percolation {
     // is the site (row, col) full?
     public boolean isFull(int row, int col) {
         int pos = xyTo1D(row, col);
-        if (wqu.connected(pos, topsite)) {
+        if (wqu2.connected(pos, topsite) && isOpen(row, col)) {
             return true;
         }
         return false;
