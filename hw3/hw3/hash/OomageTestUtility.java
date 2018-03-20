@@ -1,17 +1,28 @@
 package hw3.hash;
 
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 public class OomageTestUtility {
     public static boolean haveNiceHashCodeSpread(List<Oomage> oomages, int M) {
-        /* TODO:
-         * Write a utility function that returns true if the given oomages
-         * have hashCodes that would distribute them fairly evenly across
-         * M buckets. To do this, convert each oomage's hashcode in the
-         * same way as in the visualizer, i.e. (& 0x7FFFFFFF) % M.
-         * and ensure that no bucket has fewer than N / 50
-         * Oomages and no bucket has more than N / 2.5 Oomages.
-         */
-        return false;
+        Map<Integer, Integer> buckets = new HashMap<>();
+        int numbuckets;
+        int size = oomages.size();
+        for (Oomage o : oomages) {
+            numbuckets = (o.hashCode() & 0x7FFFFFFF) % M;
+            if (buckets.containsKey(numbuckets)) {
+                int count = buckets.get(numbuckets) + 1;
+                buckets.replace(numbuckets, count);
+            } else {
+                buckets.put(numbuckets, 1);
+            }
+        }
+        for (int v : buckets.values()) {
+            if (v < size / 50 || v > size / 2.5) {
+                return false;
+            }
+        }
+        return true;
     }
 }
