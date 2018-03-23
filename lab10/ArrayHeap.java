@@ -163,21 +163,11 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
      */
     @Override
     public T removeMin() {
-        if (size == 0) {
-            System.out.println("This is an error- no such element exception");
-            //break;
-        }
         T min = contents[1].myItem;
         swap(1, size);
         size -= 1;
-        sink(1);
         contents[size + 1] = null;     // to avoid loitering and help with garbage collection
-        /**
-         if ((size > 0) && (size == (contents.length - 1) / 4)) {
-         resize(contents.length / 2);
-         }
-        assert isMinHeap();
-         */
+        sink(1);
         return min;
     }
 
@@ -205,6 +195,7 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
                 contents[i].myPriority = priority;
                 swim(i);
                 sink(i);
+                break;
             }
         }
 
