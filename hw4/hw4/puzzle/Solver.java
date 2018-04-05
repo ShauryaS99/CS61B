@@ -12,13 +12,13 @@ public class Solver {
     private int move;
     private SearchNode min;
     private WorldState start;
-    private Stack StackSolution = new Stack();
-    private List ListSolution = new LinkedList();
+    private Stack stackSolution = new Stack();
+    private List listSolution = new LinkedList();
 
     public Solver(WorldState initial) {
         start = initial;
         SearchNode x = new SearchNode(initial);
-        ListSolution.add(x);
+        listSolution.add(x);
         vals.insert(x);
         solveHelper(vals);
     }
@@ -28,7 +28,7 @@ public class Solver {
     }
 
     public Iterable<WorldState> solution() {
-        return StackSolution;
+        return stackSolution;
     }
 
     private class SearchNode implements Comparable<SearchNode> {
@@ -82,17 +82,17 @@ public class Solver {
                 }
             }
             min = (SearchNode) vals.delMin();
-            ListSolution.add(min);
+            listSolution.add(min);
         }
         while (!min.curr.equals(start)) {
             move += 1;
-            StackSolution.push(min.curr);
-            int index = ListSolution.indexOf(min.parent);
+            stackSolution.push(min.curr);
+            int index = listSolution.indexOf(min.parent);
             if (index < 0) {
                 break;
             }
-            min = (SearchNode) ListSolution.get(index);
+            min = (SearchNode) listSolution.get(index);
         }
-        StackSolution.push(min.curr);
+        stackSolution.push(min.curr);
     }
 }
