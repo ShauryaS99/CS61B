@@ -1,6 +1,5 @@
 import java.util.HashMap;
 import java.util.Map;
-import java.lang.Math;
 import static java.lang.Math.abs;
 
 /**
@@ -56,7 +55,8 @@ public class Rasterer {
         //checks if query_success
         boolean query_success = true;
         if ((raster_lr_lon < MapServer.ROOT_ULLON) || (raster_ul_lon > MapServer.ROOT_LRLON
-                || (raster_ul_lat < MapServer.ROOT_LRLAT) || (raster_lr_lat > MapServer.ROOT_ULLAT))) {
+                || (raster_ul_lat < MapServer.ROOT_LRLAT)
+                || (raster_lr_lat > MapServer.ROOT_ULLAT))) {
             query_success = false;
         }
         double raster_width = abs(raster_ul_lon - raster_lr_lon);
@@ -81,27 +81,25 @@ public class Rasterer {
         } else {
             depth = 7;
         }
-
-
-
         //images to use
         double tilesizelon = abs(MapServer.ROOT_ULLON - MapServer.ROOT_LRLON) / Math.pow(2, depth);
         double tilesizelat = abs(MapServer.ROOT_ULLAT - MapServer.ROOT_LRLAT) / Math.pow(2, depth);
 
-        int near_ul_lon = (int) abs((MapServer.ROOT_ULLON - raster_ul_lon) / tilesizelon); //iterates through long # of nearest box in top left (Ai)
-        double img_tl_long = MapServer.ROOT_ULLON + (near_ul_lon * tilesizelon); // long value of top left (A)
-        int top_right_long = (int) (Math.pow(2,depth) - abs((MapServer.ROOT_LRLON - raster_lr_lon) / tilesizelon)) + 1;
-
-        //int near_lon_two = (int) (near_ul_lon + (raster_width / tilesizelon));
+        //iterates through long # of nearest box in top left (Ai)
+        int near_ul_lon = (int) abs((MapServer.ROOT_ULLON - raster_ul_lon) / tilesizelon);
+        // long value of top left (A)
+        double img_tl_long = MapServer.ROOT_ULLON + (near_ul_lon * tilesizelon);
+        int top_right_long = (int) (Math.pow(2, depth) - abs((MapServer.ROOT_LRLON - raster_lr_lon)
+                / tilesizelon)) + 1;
         int numxtiles = abs(top_right_long - near_ul_lon);
 
-        int near_ul_lat = (int) abs((MapServer.ROOT_ULLAT - raster_ul_lat) / tilesizelat); //iterates through lat # of nearest box in top left (Bi)
-        double img_tl_lat = MapServer.ROOT_ULLAT - (near_ul_lat * tilesizelat); // lat value of top left (B)
-        int bottom_left_lat = (int) (Math.pow(2, depth) - abs((MapServer.ROOT_LRLAT - raster_lr_lat) / tilesizelat)) + 1;
-
-       // int near_lat_two = (int) (near_ul_lat + (raster_height / tilesizelat));
+        //iterates through lat # of nearest box in top left (Bi)
+        int near_ul_lat = (int) abs((MapServer.ROOT_ULLAT - raster_ul_lat) / tilesizelat);
+        // lat value of top left (B)
+        double img_tl_lat = MapServer.ROOT_ULLAT - (near_ul_lat * tilesizelat);
+        int bottom_left_lat = (int) (Math.pow(2, depth) - abs((MapServer.ROOT_LRLAT - raster_lr_lat)
+                / tilesizelat)) + 1;
         int numytiles = abs(bottom_left_lat - near_ul_lat);
-
         String[][] render_grid = new String[numytiles][numxtiles];
 
         for (int a = 0; a < numytiles; a++) { // a is iterating through vertically
@@ -110,53 +108,10 @@ public class Rasterer {
                 render_grid[a][b] = imgname;
             }
         }
-
         raster_ul_lon = img_tl_long;
         raster_ul_lat = img_tl_lat;
         raster_lr_lon = MapServer.ROOT_ULLON + (top_right_long * tilesizelon);
-        raster_lr_lat = MapServer.ROOT_ULLAT - (bottom_left_lat *tilesizelat);
-
-        /**int near_lr_lon_a = (int) abs((MapServer.ROOT_ULLON - raster_lr_lon) / tilesizelon) + 1;
-        double img_lr_long_a = MapServer.ROOT_ULLON + (near_lr_lon_a * tilesizelon);
-        double topleft_lon = 0; //iterating top corner value for for loop (Xi)
-        double near_lr_long = 0; // bottom corner value of bottom corner img (C)
-
-        int near_lr_lat_a = (int) abs((MapServer.ROOT_ULLAT - raster_lr_lat) / tilesizelat) + 1;
-        double img_lr_lat_a = MapServer.ROOT_ULLAT - (near_lr_lat_a * tilesizelat);
-        double topleft_lat = 0; //iterating top corner value for for loop (Yi)
-        double near_lr_lat = 0; // bottom corner value of bottom corner img (D)
-
-        //for array size we get the number of tiles in the x & y directions
-        int numberofx = abs(near_ul_lon - near_lr_lon_a);
-        int numberofy = abs(near_ul_lat - near_lr_lat_a);
-        String[][] render_grid = new String[numberofy][numberofx];
-        int x;
-        int y;
-
-        //iterates through sequentially to get image comparingz topleft to rastering lower right
-
-        for(topleft_lat = img_tl_lat, x = 0; numberofx> x; topleft_lat -= tilesizelat, x++, near_ul_lat++) {
-            near_ul_lon = temp;
-            for(topleft_lon = img_tl_long, y = 0; y < numberofy; topleft_lon += tilesizelon, y++) {
-                String imgname = getimg(depth, near_ul_lon + y, near_ul_lat + x);
-                System.out.println("x: "+ x);
-                System.out.println(y);
-                System.out.println(imgname);
-                render_grid[y][x] = imgname;
-            }
-        }
-
-        near_lr_long =  topleft_lon; //(C)
-        near_lr_lat = topleft_lat; // (D)
-
-        //params to return
-        raster_ul_lon = img_tl_long;
-        raster_ul_lat = img_tl_lat;
-        raster_lr_lon = near_lr_long;
-        raster_lr_lat = near_lr_lat;
-        //depth = depth;
-        //query_success = query_success;
-        //render_grid = render_grid;*/
+        raster_lr_lat = MapServer.ROOT_ULLAT - (bottom_left_lat * tilesizelat);
 
         System.out.println(params);
         Map<String, Object> results = new HashMap<>();
@@ -169,7 +124,6 @@ public class Rasterer {
         results.put("query_success", query_success);
         System.out.println("Since you haven't implemented getMapRaster, nothing is displayed in "
                            + "your browser.");
-
         return results;
     }
 
