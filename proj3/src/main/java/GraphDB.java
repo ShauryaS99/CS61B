@@ -7,6 +7,10 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Graph for storing all of the intersection (vertex) and road (edge) information.
@@ -18,6 +22,7 @@ import java.util.ArrayList;
  * @author Alan Yao, Josh Hug
  */
 public class GraphDB {
+    private final HashMap<Long, Node> graphmap = new HashMap<Long, Node>();
     /** Your instance variables for storing the graph. You should consider
      * creating helper classes, e.g. Node, Edge, etc. */
 
@@ -40,6 +45,38 @@ public class GraphDB {
             e.printStackTrace();
         }
         clean();
+    }
+
+    static class Node {
+        private long id;
+        private double lon;
+        private double lat;
+        Set<Long> neighbors;
+
+        //this is a constructor with a parameter
+        public Node(long id, double lon, double lat)
+        {
+            this.id = id;
+            this.lon = lon;
+            this.lat = lat;
+            this.neighbors = new HashSet();
+        }
+
+        // a setter for your item
+        public void setItem(long id)
+        {
+            this.id = id;
+        }
+
+        // this is a getter for your item
+        public long getItem()
+        {
+            return this.id;
+        }
+
+
+        //this class also overrides equals() and hashCode() methods so that every two nodes
+        //equal to each other if and only if their content equal to each other
     }
 
     /**
@@ -67,6 +104,7 @@ public class GraphDB {
     Iterable<Long> vertices() {
         //YOUR CODE HERE, this currently returns only an empty list.
         return new ArrayList<Long>();
+        //return
     }
 
     /**
@@ -128,7 +166,7 @@ public class GraphDB {
      * @return The id of the node in the graph closest to the target.
      */
     long closest(double lon, double lat) {
-        return 0;
+       return 0;
     }
 
     /**
@@ -137,7 +175,7 @@ public class GraphDB {
      * @return The longitude of the vertex.
      */
     double lon(long v) {
-        return 0;
+        return graphmap.get(v).lon;
     }
 
     /**
@@ -146,6 +184,18 @@ public class GraphDB {
      * @return The latitude of the vertex.
      */
     double lat(long v) {
-        return 0;
+        return graphmap.get(v).lat;
+    }
+
+    public void addEdge(long a, long b) {
+        ((Node)this.graphmap.get(b)).neighbors.add(a);
+    }
+
+    public void addNode(Node n) {
+        this.graphmap.put(n.id, n);
+    }
+
+    public void removeNode(Node n) {
+        this.graphmap.remove(n.id);
     }
 }

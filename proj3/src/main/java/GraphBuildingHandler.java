@@ -2,9 +2,13 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
+import javax.xml.soap.Node;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Iterator;
 
 /**
  *  Parses OSM XML files using an XML SAX parser. Used to construct the graph of roads for
@@ -68,6 +72,13 @@ public class GraphBuildingHandler extends DefaultHandler {
         if (qName.equals("node")) {
             /* We encountered a new <node...> tag. */
             activeState = "node";
+            double lat= Double.parseDouble(attributes.getValue("lat"));
+            double lon= Double.parseDouble(attributes.getValue("lon"));
+            long id = Long.parseLong(attributes.getValue("id"));
+            HashMap<Long, Node> hmap = new HashMap<Long, Node>();
+            HashSet<Long> hmap2 = new HashSet<Long>();
+            //this.g.addNode();
+
 //            System.out.println("Node id: " + attributes.getValue("id"));
 //            System.out.println("Node lon: " + attributes.getValue("lon"));
 //            System.out.println("Node lat: " + attributes.getValue("lat"));
