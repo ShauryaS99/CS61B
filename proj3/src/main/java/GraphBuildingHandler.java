@@ -2,7 +2,6 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import javax.xml.soap.Node;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -75,7 +74,7 @@ public class GraphBuildingHandler extends DefaultHandler {
             double lat= Double.parseDouble(attributes.getValue("lat"));
             double lon= Double.parseDouble(attributes.getValue("lon"));
             long id = Long.parseLong(attributes.getValue("id"));
-            HashMap<Long, Node> hmap = new HashMap<Long, Node>();
+            HashMap<Long, GraphDB.Node> hmap = new HashMap<Long, GraphDB.Node>();
             HashSet<Long> hmap2 = new HashSet<Long>();
             //this.g.addNode();
 

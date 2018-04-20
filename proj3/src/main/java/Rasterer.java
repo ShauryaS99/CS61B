@@ -48,21 +48,21 @@ public class Rasterer {
      */
     public Map<String, Object> getMapRaster(Map<String, Double> params) {
         //sets all params
-        double raster_ul_lon = params.get("ullon");
-        double raster_ul_lat = params.get("ullat");
-        double raster_lr_lon = params.get("lrlon");
-        double raster_lr_lat = params.get("lrlat");
+        double rasterUlLon = params.get("ullon");
+        double rasterUlLat = params.get("ullat");
+        double rasterLrLon = params.get("lrlon");
+        double rasterLrLat = params.get("lrlat");
         //checks if query_success
-        boolean query_success = true;
-        if ((raster_lr_lon < MapServer.ROOT_ULLON) || (raster_ul_lon > MapServer.ROOT_LRLON
-                || (raster_ul_lat < MapServer.ROOT_LRLAT)
-                || (raster_lr_lat > MapServer.ROOT_ULLAT))) {
-            query_success = false;
+        boolean querySuccess = true;
+        if ((rasterLrLon < MapServer.ROOT_ULLON) || (rasterUlLon > MapServer.ROOT_LRLON
+                || (rasterUlLat < MapServer.ROOT_LRLAT)
+                || (rasterLrLat > MapServer.ROOT_ULLAT))) {
+            querySuccess = false;
         }
-        double raster_width = abs(raster_ul_lon - raster_lr_lon);
-        double raster_height = abs(raster_ul_lat - raster_lr_lat);
+        double rasterWidth = abs(rasterUlLon - rasterLrLon);
+        //double raster_height = abs(rasterUlLat - rasterLrLat);
         //zoomlevel
-        double londpp = (raster_width) * 288200 / params.get("w");
+        double londpp = (rasterWidth) * 288200 / params.get("w");
         int depth;
         if (londpp > 98.94561767578125) {
             depth = 0;
@@ -86,42 +86,42 @@ public class Rasterer {
         double tilesizelat = abs(MapServer.ROOT_ULLAT - MapServer.ROOT_LRLAT) / Math.pow(2, depth);
 
         //iterates through long # of nearest box in top left (Ai)
-        int near_ul_lon = (int) abs((MapServer.ROOT_ULLON - raster_ul_lon) / tilesizelon);
+        int nearUlLon = (int) abs((MapServer.ROOT_ULLON - rasterUlLon) / tilesizelon);
         // long value of top left (A)
-        double img_tl_long = MapServer.ROOT_ULLON + (near_ul_lon * tilesizelon);
-        int top_right_long = (int) (Math.pow(2, depth) - abs((MapServer.ROOT_LRLON - raster_lr_lon)
+        double imgTlLong = MapServer.ROOT_ULLON + (nearUlLon * tilesizelon);
+        int topRightLong = (int) (Math.pow(2, depth) - abs((MapServer.ROOT_LRLON - rasterLrLon)
                 / tilesizelon)) + 1;
-        int numxtiles = abs(top_right_long - near_ul_lon);
+        int numxtiles = abs(topRightLong - nearUlLon);
 
         //iterates through lat # of nearest box in top left (Bi)
-        int near_ul_lat = (int) abs((MapServer.ROOT_ULLAT - raster_ul_lat) / tilesizelat);
+        int nearUlLat = (int) abs((MapServer.ROOT_ULLAT - rasterUlLat) / tilesizelat);
         // lat value of top left (B)
-        double img_tl_lat = MapServer.ROOT_ULLAT - (near_ul_lat * tilesizelat);
-        int bottom_left_lat = (int) (Math.pow(2, depth) - abs((MapServer.ROOT_LRLAT - raster_lr_lat)
+        double imgTlLat = MapServer.ROOT_ULLAT - (nearUlLat * tilesizelat);
+        int bottomLeftLat = (int) (Math.pow(2, depth) - abs((MapServer.ROOT_LRLAT - rasterLrLat)
                 / tilesizelat)) + 1;
-        int numytiles = abs(bottom_left_lat - near_ul_lat);
-        String[][] render_grid = new String[numytiles][numxtiles];
+        int numytiles = abs(bottomLeftLat - nearUlLat);
+        String[][] renderGrid = new String[numytiles][numxtiles];
 
         for (int a = 0; a < numytiles; a++) { // a is iterating through vertically
             for (int b = 0; b < numxtiles; b++) { // b is iterating through horizontally
-                String imgname = getimg(depth, near_ul_lon + b, near_ul_lat + a);
-                render_grid[a][b] = imgname;
+                String imgname = getimg(depth, nearUlLon + b, nearUlLat + a);
+                renderGrid[a][b] = imgname;
             }
         }
-        raster_ul_lon = img_tl_long;
-        raster_ul_lat = img_tl_lat;
-        raster_lr_lon = MapServer.ROOT_ULLON + (top_right_long * tilesizelon);
-        raster_lr_lat = MapServer.ROOT_ULLAT - (bottom_left_lat * tilesizelat);
+        rasterUlLon = imgTlLong;
+        rasterUlLat = imgTlLat;
+        rasterLrLon = MapServer.ROOT_ULLON + (topRightLong * tilesizelon);
+        rasterLrLat = MapServer.ROOT_ULLAT - (bottomLeftLat * tilesizelat);
 
         System.out.println(params);
         Map<String, Object> results = new HashMap<>();
-        results.put("render_grid", render_grid);
-        results.put("raster_ul_lon", raster_ul_lon);
-        results.put("raster_ul_lat", raster_ul_lat);
-        results.put("raster_lr_lon", raster_lr_lon);
-        results.put("raster_lr_lat", raster_lr_lat);
+        results.put("render_grid", renderGrid);
+        results.put("raster_ul_lon", rasterUlLon);
+        results.put("raster_ul_lat", rasterUlLat);
+        results.put("raster_lr_lon", rasterLrLon);
+        results.put("raster_lr_lat", rasterLrLat);
         results.put("depth", depth);
-        results.put("query_success", query_success);
+        results.put("query_success", querySuccess);
         System.out.println("Since you haven't implemented getMapRaster, nothing is displayed in "
                            + "your browser.");
         return results;
