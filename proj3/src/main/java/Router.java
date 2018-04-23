@@ -48,9 +48,33 @@ public class Router {
         pathTo.add(destID);
 
 
-        helperShortPath(g, fringe, distances, edges, destID, flag);
-        if (flag) {
-            return null;
+        for (int i = 0; fringe.peek().getItem() != destID; i++) {
+            if (fringe.peek() == null) {
+                return null;
+            }
+            long temp = fringe.poll().getItem();
+            for (long neighbor : g.adjacent(temp)) {
+                double distAdj = distances.get(temp) + g.distance(temp, neighbor);
+                boolean distancecompare = distances.get(neighbor) > distAdj;
+                if (distances.get(neighbor) > distAdj) {
+                    if (distancecompare) {
+                        edges.put(neighbor, temp);
+                        GraphDB.Node nodeNext = g.getNode(neighbor);
+                        distances.put(neighbor, distAdj);
+                        nodeNext.setPriority(distAdj + g.distance(neighbor, destID));
+                        boolean contain = fringe.contains(nodeNext);
+                        if (contain) {
+                            fringe.remove(nodeNext);
+                            fringe.add(nodeNext);
+                        } else if (!contain) {
+                            fringe.add(nodeNext);
+                        }
+                    }
+                }
+            }
+            if (fringe.peek() == null) {
+                return null;
+            }
         }
 
         Long edge = edges.get(destID);
