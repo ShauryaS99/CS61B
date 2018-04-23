@@ -34,6 +34,7 @@ public class Router {
         PriorityQueue<GraphDB.Node> fringe = new PriorityQueue<>();
         HashMap<Long, Double> distances = new HashMap<>();
         LinkedList<Long> pathTo = new LinkedList<>();
+        boolean flag = false;
 
         iterate(g, distances);
 
@@ -46,10 +47,11 @@ public class Router {
 
         pathTo.add(destID);
 
-        if (fringe.peek() == null) {
+
+        helperShortPath(g, fringe, distances, edges, destID, flag);
+        if (flag) {
             return null;
         }
-        helperShortPath(g, fringe, distances, edges, destID);
 
         Long edge = edges.get(destID);
         while (edge != null) {
@@ -82,8 +84,11 @@ public class Router {
 
     private static void helperShortPath(GraphDB g, PriorityQueue<GraphDB.Node> fringe,
                                         HashMap<Long, Double> distances, HashMap<Long, Long> edges,
-                                        long destID) {
+                                        long destID, boolean flag) {
         for (int i = 0; fringe.peek().getItem() != destID; i++) {
+            if (fringe.peek() == null) {
+                flag = true;
+            }
             long temp = fringe.poll().getItem();
             for (long neighbor : g.adjacent(temp)) {
                 double distAdj = distances.get(temp) + g.distance(temp, neighbor);
