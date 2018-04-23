@@ -46,8 +46,11 @@ public class Router {
 
         pathTo.add(destID);
 
+        if (fringe.peek() == null) {
+            return null;
+        }
         helperShortPath(g, fringe, distances, edges, destID);
-        
+
         Long edge = edges.get(destID);
         while (edge != null) {
             pathTo.addFirst(edge);
