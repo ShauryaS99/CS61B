@@ -1,10 +1,14 @@
+
+
 import java.util.List;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
+import java.util.LinkedList;
+import java.util.PriorityQueue;
+import java.util.HashMap;
 /**
- * This class provides a shortestPath method for finding routes between two points
+ * This class pronodeIdes a shortestPath method for finding routes between two points
  * on the map. Start by using Dijkstra's, and if your code isn't fast enough for your
  * satisfaction (or the autograder), upgrade your implementation by switching it to A*.
  * Your code will probably not be fast enough to pass the autograder unless you use A*.
@@ -13,7 +17,7 @@ import java.util.regex.Pattern;
  */
 public class Router {
     /**
-     * Return a List of longs representing the shortest path from the node
+     * Return a List of longs representing the shortest pathTo from the node
      * closest to a start location and the node closest to the destination
      * location.
      * @param g The graph to use.
@@ -21,11 +25,35 @@ public class Router {
      * @param stlat The latitude of the start location.
      * @param destlon The longitude of the destination location.
      * @param destlat The latitude of the destination location.
-     * @return A list of node id's in the order visited on the shortest path.
+     * @return A list of node id's in the order visited on the shortest pathTo.
      */
     public static List<Long> shortestPath(GraphDB g, double stlon, double stlat,
                                           double destlon, double destlat) {
-        return null; // FIXME
+
+        HashMap<Long, Long> edges = new HashMap<>();
+        PriorityQueue<GraphDB.Node> fringe = new PriorityQueue<>();
+        HashMap<Long, Double> distances = new HashMap<>();
+        LinkedList<Long> pathTo = new LinkedList<>();
+
+        iterate(g, distances);
+
+        Long startID = g.closest(stlon, stlat);
+        Long destID = g.closest(destlon, destlat);
+        GraphDB.Node stNode = g.getNode(startID);
+        stNode.setPriority(0);
+        distances.put(startID, 0.0);
+        fringe.add(stNode);
+
+        pathTo.add(destID);
+
+        helperShortPath(g, fringe, distances, edges, destID);
+        
+        Long edge = edges.get(destID);
+        while (edge != null) {
+            pathTo.addFirst(edge);
+            edge = edges.get(edge);
+        }
+        return pathTo;
     }
 
     /**
@@ -33,13 +61,48 @@ public class Router {
      * @param g The graph to use.
      * @param route The route to translate into directions. Each element
      *              corresponds to a node from the graph in the route.
-     * @return A list of NavigatiionDirection objects corresponding to the input
+     * @return A list of NavigationDirection objects corresponding to the input
      * route.
      */
+
     public static List<NavigationDirection> routeDirections(GraphDB g, List<Long> route) {
-        return null; // FIXME
+
+        return null; // FIXME- ok! while!fringe.isEmpty
     }
 
+    private static void iterate(GraphDB g, HashMap<Long, Double> distances) {
+        Iterable<Long> allVertices = g.vertices();
+        for (Long vertex : allVertices) {
+            distances.put(vertex, Double.MAX_VALUE);
+        }
+    }
+
+    private static void helperShortPath(GraphDB g, PriorityQueue<GraphDB.Node> fringe,
+                                        HashMap<Long, Double> distances, HashMap<Long, Long> edges,
+                                        long destID) {
+        for (int i = 0; fringe.peek().getItem() != destID; i++) {
+            long temp = fringe.poll().getItem();
+            for (long neighbor : g.adjacent(temp)) {
+                double distAdj = distances.get(temp) + g.distance(temp, neighbor);
+                boolean distancecompare = distances.get(neighbor) > distAdj;
+                if (distances.get(neighbor) > distAdj) {
+                    if (distancecompare) {
+                        edges.put(neighbor, temp);
+                        GraphDB.Node nodeNext = g.getNode(neighbor);
+                        distances.put(neighbor, distAdj);
+                        nodeNext.setPriority(distAdj + g.distance(neighbor, destID));
+                        boolean contain = fringe.contains(nodeNext);
+                        if (contain) {
+                            fringe.remove(nodeNext);
+                            fringe.add(nodeNext);
+                        } else if (!contain) {
+                            fringe.add(nodeNext);
+                        }
+                    }
+                }
+            }
+        }
+    }
 
     /**
      * Class to represent a navigation direction, which consists of 3 attributes:

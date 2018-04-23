@@ -9,8 +9,8 @@ import javax.xml.parsers.SAXParserFactory;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
+import java.util.List;
 
 /**
  * Graph for storing all of the intersection (vertex) and road (edge) information.
@@ -22,7 +22,7 @@ import java.util.Set;
  * @author Alan Yao, Josh Hug
  */
 public class GraphDB {
-    private final HashMap<Long, Node> graphmap = new HashMap<Long, Node>();
+    protected final HashMap<Long, Node> graphmap = new HashMap<Long, Node>();
     /** Your instance variables for storing the graph. You should consider
      * creating helper classes, e.g. Node, Edge, etc. */
 
@@ -47,31 +47,43 @@ public class GraphDB {
         clean();
     }
 
-    static class Node {
+    class Node implements Comparable<Node> {
         private long id;
         private double lon;
         private double lat;
+        String name;
+        double priority = 0;
         Set<Long> neighbors;
 
         //this is a constructor with a parameter
-        public Node(long id, double lon, double lat)
-        {
+        Node(long id, double lon, double lat) {
             this.id = id;
             this.lon = lon;
             this.lat = lat;
             this.neighbors = new HashSet();
         }
 
-        // a setter for your item
-        public void setItem(long id)
-        {
-            this.id = id;
+        @Override
+        public int compareTo(Node n) {
+            if (n.priority > this.priority) {
+                return -1;
+            } else if (n.priority < this.priority) {
+                return 1;
+            } else {
+                return 0;
+            }
         }
 
-        // this is a getter for your item
-        public long getItem()
-        {
-            return this.id;
+        public long getItem() {
+            return id;
+        }
+
+        public void setPriority(double priority) {
+            this.priority = priority;
+        }
+
+        public void setName(String name) {
+            this.name = name;
         }
 
 
@@ -94,7 +106,17 @@ public class GraphDB {
      *  we can reasonably assume this since typically roads are connected.
      */
     private void clean() {
-        // TODO: Your code here.
+        List<Node> nodes = new ArrayList<>(graphmap.values());
+        for (Node n: nodes) {
+            HashSet<Long> x = new HashSet<>();
+            if (n.neighbors.equals(x)) {
+                removeNode(n);
+            }
+        }
+    }
+
+    public Node getNode(long id) {
+        return graphmap.get(id);
     }
 
     /**
@@ -103,8 +125,8 @@ public class GraphDB {
      */
     Iterable<Long> vertices() {
         //YOUR CODE HERE, this currently returns only an empty list.
-        return new ArrayList<Long>();
-        //return
+        return graphmap.keySet();
+
     }
 
     /**
@@ -113,7 +135,7 @@ public class GraphDB {
      * @return An iterable of the ids of the neighbors of v.
      */
     Iterable<Long> adjacent(long v) {
-        return null;
+        return graphmap.get(v).neighbors;
     }
 
     /**
@@ -166,7 +188,28 @@ public class GraphDB {
      * @return The id of the node in the graph closest to the target.
      */
     long closest(double lon, double lat) {
-       return 0;
+        List<Node> nodes = new ArrayList<>(graphmap.values());
+        double distance = 10000000;
+        long id = 12345678910L;
+        for (Node n : nodes) {
+
+            double phi1 = Math.toRadians(lat); //v
+            double phi2 = Math.toRadians(n.lat); //w
+            double dphi = Math.toRadians(n.lat - lat);
+            double dlambda = Math.toRadians(n.lon - lon);
+            double a = Math.sin(dphi / 2.0) * Math.sin(dphi / 2.0);
+            a += Math.cos(phi1) * Math.cos(phi2) * Math.sin(dlambda / 2.0)
+                    * Math.sin(dlambda / 2.0);
+            double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+            double tempdistance = 3963 * c;
+
+            if (distance > tempdistance) {
+                id = n.id;
+                distance = tempdistance;
+            }
+        }
+        return id;
     }
 
     /**
@@ -188,10 +231,12 @@ public class GraphDB {
     }
 
     public void addEdge(long a, long b) {
-        ((Node)this.graphmap.get(b)).neighbors.add(a);
+        this.graphmap.get(a).neighbors.add(b);
+        this.graphmap.get(b).neighbors.add(a);
     }
 
-    public void addNode(Node n) {
+    public void addNode(long id, double lon, double lat) {
+        Node n = new Node(id, lon, lat);
         this.graphmap.put(n.id, n);
     }
 
