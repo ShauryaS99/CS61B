@@ -4,6 +4,7 @@ import java.awt.Color;
 public class SeamCarver {
     private double[][] energyMatrix;
     private Picture currentPicture;
+
     public SeamCarver(Picture picture) {
         currentPicture = picture;
         energyMatrix = new double[currentPicture.height()][currentPicture.width()];
@@ -37,14 +38,12 @@ public class SeamCarver {
         //calculating x-gradient for all cases
         if (x == 0) {
             Color rightRGBx = currentPicture.get(x + 1, y);
-            x = width() - 1;
-            Color leftRGBx = currentPicture.get(x - 1, y);
+            Color leftRGBx = currentPicture.get(width() - 1, y);
             xGradient = energyHelper(leftRGBx, rightRGBx);
 
         } else if (x == width() - 1) {
             Color leftRGBx = currentPicture.get(x - 1, y);
-            x = 0;
-            Color rightRGBx = currentPicture.get(x + 1, y);
+            Color rightRGBx = currentPicture.get(0, y);
             xGradient = energyHelper(leftRGBx, rightRGBx);
         } else {
             Color rightRGBx = currentPicture.get(x + 1, y);
@@ -54,13 +53,11 @@ public class SeamCarver {
         //calculating y-gradient for all cases
         if (y == 0) {
             Color downRGBy = currentPicture.get(x, y + 1);
-            y = height() - 1;
-            Color upRGBy = currentPicture.get(x, y - 1);
+            Color upRGBy = currentPicture.get(x, height() - 1);
             yGradient = energyHelper(downRGBy, upRGBy);
         } else if (y == height() - 1) {
             Color upRGBy = currentPicture.get(x, y - 1);
-            y = 0;
-            Color downRGBy = currentPicture.get(x, y + 1);
+            Color downRGBy = currentPicture.get(x, 0);
             yGradient = energyHelper(downRGBy, upRGBy);
         } else {
             Color downRGBy = currentPicture.get(x, y + 1);
