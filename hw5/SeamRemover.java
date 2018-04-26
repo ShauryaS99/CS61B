@@ -7,6 +7,7 @@ import edu.princeton.cs.algs4.Picture;
 
 public class SeamRemover {
     public SeamRemover() {
+
     }
 
     public static Picture removeHorizontalSeam(Picture var0, int[] var1) {
