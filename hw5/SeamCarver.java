@@ -6,7 +6,7 @@ public class SeamCarver {
     private Picture currentPicture;
 
     public SeamCarver(Picture picture) {
-        currentPicture = picture;
+        currentPicture = new Picture(picture);
         energyMatrix = new double[currentPicture.height()][currentPicture.width()];
         for (int w = 0; w < currentPicture.width(); w++) {
             for (int h = 0; h < currentPicture.height(); h++) {
@@ -16,7 +16,9 @@ public class SeamCarver {
     }
 
     public Picture picture() {
-        return currentPicture;
+        Picture newPicture = currentPicture;
+        currentPicture = new Picture(currentPicture);
+        return newPicture;
     }
 
     public int width() {
