@@ -85,10 +85,10 @@ public class SeamCarver {
         int numCol = 0;
         boolean firstIteration = true;
         //iterate from bottom row up
-        for (int h = height - 1; h >= 0; h--) {
+        for (int h = 0; h < height; h++) {
             if (firstIteration) {
                 for (int w = 0; w < width; w++) {
-                    double energy = energy(w, h);
+                    double energy = energyMatrix[h][w];
                     if (energy < energyLowest) {
                         energyLowest = energy;
                         numCol = w;
@@ -99,11 +99,12 @@ public class SeamCarver {
                 double energyLeft = 999999999;
                 double energyRight = 999999999;
                 if (numCol != 0) {
-                    energyLeft = energy(numCol - 1, h);
-                } else if (numCol != width - 1) {
-                    energyRight = energy(numCol + 1, h);
+                    energyLeft = energyMatrix[h][numCol - 1]; //energy(numCol - 1, h);
                 }
-                double energyMid = energy(numCol, h);
+                if (numCol != width - 1) {
+                    energyRight = energyMatrix[h][numCol + 1]; //energy(numCol + 1, h);
+                }
+                double energyMid = energyMatrix[h][numCol]; //energy(numCol, h);
                 double minEnergy = Math.min(Math.min(energyLeft, energyMid), energyRight);
                 if (energyLeft == minEnergy) {
                     numCol -= 1;
