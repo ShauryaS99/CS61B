@@ -44,8 +44,7 @@ public class SeamCarver {
 
         if (width() == 1) {
             xGradient = 0;
-        }
-        else {
+        } else {
             //calculating x-gradient for all cases
             if (x == 0) {
                 Color rightRGBx = currentPicture.get(x + 1, y);
@@ -65,8 +64,7 @@ public class SeamCarver {
         //calculating y-gradient for all cases
         if (height() == 1) {
             yGradient = 0;
-        }
-        else {
+        } else {
             if (y == 0) {
                 Color downRGBy = currentPicture.get(x, y + 1);
                 Color upRGBy = currentPicture.get(x, height() - 1);
