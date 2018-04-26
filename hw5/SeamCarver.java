@@ -94,6 +94,13 @@ public class SeamCarver {
 
     private double[][] minEnergyMatrix() {
         double[][] minMatrix = new double[energyMatrix.length][energyMatrix[0].length];
+        if (energyMatrix[0].length == 1 || energyMatrix.length == 1) {
+            minMatrix[0][0] = energyMatrix[0][0];
+            for (int i = 1; i < energyMatrix.length; i++) {
+                minMatrix[i][0] = energyMatrix[i][0] + energyMatrix[i - 1][0];
+            }
+            return minMatrix;
+        }
         for (int h = 0; h < energyMatrix.length; h++) {
             for (int w = 0; w < energyMatrix[0].length; w++) {
                 if (h == 0) {
@@ -132,6 +139,11 @@ public class SeamCarver {
         int height = minEnergyMatrix.length;
         int[] verticalSeam = new int[height];
         int numCol = 0;
+        if (width == 1 || height == 1) {
+            for (int i = 1; i < energyMatrix.length; i++) {
+                verticalSeam[i] = 0;
+            }
+        }
         for (int h = height - 1; h >= 0; h--) {
             if (h == height - 1) {
                 for (int w = 0; w < width; w++) {
