@@ -1,9 +1,12 @@
 import edu.princeton.cs.algs4.Picture;
 import java.awt.Color;
+import java.util.Arrays;
 
 public class SeamCarver {
     private double[][] energyMatrix;
     private Picture currentPicture;
+    private double[][] minEnergyMatrix;
+    private double minEnergyPath;
 
     public SeamCarver(Picture picture) {
         currentPicture = new Picture(picture);
@@ -13,6 +16,8 @@ public class SeamCarver {
                 energyMatrix[h][w] = energy(w, h);
             }
         }
+        minEnergyMatrix = minEnergyMatrix();
+        minEnergyPath = getMinEnergyPath();
     }
 
     public Picture picture() {
@@ -79,54 +84,87 @@ public class SeamCarver {
         return gradient;
     }
 
-    public int[] findVerticalSeam() {
-        int width = energyMatrix[0].length;
-        int height = energyMatrix.length;
-        int[] verticalSeam = new int[height];
-        double energyLowest = 999999999;
-        int numCol = 0;
-        boolean firstIteration = true;
-        //iterate from bottom row up
-        for (int h = 0; h < height; h++) {
-            if (firstIteration) {
-                for (int w = 0; w < width; w++) {
-                    double energy = energyMatrix[h][w];
-                    if (energy < energyLowest) {
-                        energyLowest = energy;
-                        numCol = w;
-                        verticalSeam[h] = numCol;
+    private double[][] minEnergyMatrix() {
+        double[][] minMatrix = new double[energyMatrix.length][energyMatrix[0].length];
+        for (int h = 0; h < energyMatrix.length; h++) {
+            for (int w = 0; w < energyMatrix[0].length; w++) {
+                if (h == 0) {
+                    minMatrix [h][w] = energyMatrix[h][w];
+                } else {
+                    if (w == 0) {
+                        minMatrix [h][w] = energyMatrix[h][w]
+                                + Math.min(minMatrix [h - 1][w], minMatrix [h - 1][w + 1]);
+                    } else if (w == energyMatrix[0].length - 1) {
+                        minMatrix [h][w] = energyMatrix[h][w]
+                                + Math.min(minMatrix [h - 1][w], minMatrix [h - 1][w - 1]);
+                    } else {
+                        minMatrix [h][w] = energyMatrix[h][w]
+                                + Math.min(Math.min(minMatrix [h - 1][w - 1], minMatrix [h - 1][w]),
+                                        minMatrix [h - 1][w + 1]);
                     }
                 }
-            } else {
-                double energyLeft = 999999999;
-                double energyRight = 999999999;
-                if (numCol != 0) {
-                    energyLeft = energyMatrix[h][numCol - 1]; //energy(numCol - 1, h);
-                }
-                if (numCol != width - 1) {
-                    energyRight = energyMatrix[h][numCol + 1]; //energy(numCol + 1, h);
-                }
-                double energyMid = energyMatrix[h][numCol]; //energy(numCol, h);
-                double minEnergy = Math.min(Math.min(energyLeft, energyMid), energyRight);
-                if (energyLeft == minEnergy) {
-                    numCol -= 1;
-                    verticalSeam[h] = numCol;
-                } else if (energyMid == minEnergy) {
-                    verticalSeam[h] = numCol;
+            }
+        }
+        return minMatrix;
+    }
+
+    private double getMinEnergyPath() {
+        int lastRow = minEnergyMatrix.length - 1;
+        double[] tempArray = new double[minEnergyMatrix[lastRow].length];
+        System.arraycopy(minEnergyMatrix[lastRow], 0, tempArray, 0,
+                minEnergyMatrix[lastRow].length);
+        Arrays.sort(tempArray);
+        double minPath = tempArray[0];
+        return minPath;
+    }
+
+
+    public int[] findVerticalSeam() {
+        int width = minEnergyMatrix[0].length;
+        int height = minEnergyMatrix.length;
+        int[] verticalSeam = new int[height];
+        int numCol = 0;
+        for (int h = height - 1; h >= 0; h--) {
+            for (int w = 0; w < width; w++) {
+                if (h == height - 1) {
+                    if (minEnergyMatrix[h][w] == minEnergyPath) {
+                        verticalSeam[h] = w;
+                        numCol = w;
+                        w = width;
+                    }
                 } else {
-                    numCol += 1;
-                    verticalSeam[h] = numCol;
+                    double energyLeft = 999999999;
+                    double energyRight = 999999999;
+                    if (numCol != 0) {
+                        energyLeft = minEnergyMatrix[h][numCol - 1];
+                    }
+                    if (numCol != width - 1) {
+                        energyRight = minEnergyMatrix[h][numCol + 1];
+                    }
+                    double energyMid = minEnergyMatrix[h][numCol];
+                    double minEnergy = Math.min(Math.min(energyLeft, energyMid), energyRight);
+                    if (energyLeft == minEnergy) {
+                        numCol -= 1;
+                        verticalSeam[h] = numCol;
+                    } else if (energyMid == minEnergy) {
+                        verticalSeam[h] = numCol;
+                    } else {
+                        numCol += 1;
+                        verticalSeam[h] = numCol;
+                    }
+
                 }
             }
-
-            firstIteration = false;
         }
         return verticalSeam;
     }
 
     public int[] findHorizontalSeam() {
         energyMatrix = tranpose(energyMatrix);
+        minEnergyMatrix = minEnergyMatrix();
+        minEnergyPath = getMinEnergyPath();
         int[] horizontalSeam = findVerticalSeam();
+        energyMatrix = tranpose(energyMatrix);
         energyMatrix = tranpose(energyMatrix);
         return horizontalSeam;
     }
