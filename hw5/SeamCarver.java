@@ -133,34 +133,33 @@ public class SeamCarver {
         int[] verticalSeam = new int[height];
         int numCol = 0;
         for (int h = height - 1; h >= 0; h--) {
-            for (int w = 0; w < width; w++) {
-                if (h == height - 1) {
+            if (h == height - 1) {
+                for (int w = 0; w < width; w++) {
                     if (minEnergyMatrix[h][w] == minEnergyPath) {
                         verticalSeam[h] = w;
                         numCol = w;
                         w = width;
                     }
+                }
+            } else {
+                double energyLeft = 999999999;
+                double energyRight = 999999999;
+                if (numCol != 0) {
+                    energyLeft = minEnergyMatrix[h][numCol - 1];
+                }
+                if (numCol != width - 1) {
+                    energyRight = minEnergyMatrix[h][numCol + 1];
+                }
+                double energyMid = minEnergyMatrix[h][numCol];
+                double minEnergy = Math.min(Math.min(energyLeft, energyMid), energyRight);
+                if (energyLeft == minEnergy) {
+                    numCol -= 1;
+                    verticalSeam[h] = numCol;
+                } else if (energyMid == minEnergy) {
+                    verticalSeam[h] = numCol;
                 } else {
-                    double energyLeft = 999999999;
-                    double energyRight = 999999999;
-                    if (numCol != 0) {
-                        energyLeft = minEnergyMatrix[h][numCol - 1];
-                    }
-                    if (numCol != width - 1) {
-                        energyRight = minEnergyMatrix[h][numCol + 1];
-                    }
-                    double energyMid = minEnergyMatrix[h][numCol];
-                    double minEnergy = Math.min(Math.min(energyLeft, energyMid), energyRight);
-                    if (energyLeft == minEnergy) {
-                        numCol -= 1;
-                        verticalSeam[h] = numCol;
-                    } else if (energyMid == minEnergy) {
-                        verticalSeam[h] = numCol;
-                    } else {
-                        numCol += 1;
-                        verticalSeam[h] = numCol;
-                    }
-
+                    numCol += 1;
+                    verticalSeam[h] = numCol;
                 }
             }
         }
