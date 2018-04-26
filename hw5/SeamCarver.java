@@ -42,34 +42,44 @@ public class SeamCarver {
         double xGradient = 0;
         double yGradient = 0;
 
-        //calculating x-gradient for all cases
-        if (x == 0) {
-            Color rightRGBx = currentPicture.get(x + 1, y);
-            Color leftRGBx = currentPicture.get(width() - 1, y);
-            xGradient = energyHelper(leftRGBx, rightRGBx);
+        if (width() == 1) {
+            xGradient = 0;
+        }
+        else {
+            //calculating x-gradient for all cases
+            if (x == 0) {
+                Color rightRGBx = currentPicture.get(x + 1, y);
+                Color leftRGBx = currentPicture.get(width() - 1, y);
+                xGradient = energyHelper(leftRGBx, rightRGBx);
 
-        } else if (x == width() - 1) {
-            Color leftRGBx = currentPicture.get(x - 1, y);
-            Color rightRGBx = currentPicture.get(0, y);
-            xGradient = energyHelper(leftRGBx, rightRGBx);
-        } else {
-            Color rightRGBx = currentPicture.get(x + 1, y);
-            Color leftRGBx = currentPicture.get(x - 1, y);
-            xGradient = energyHelper(leftRGBx, rightRGBx);
+            } else if (x == width() - 1) {
+                Color leftRGBx = currentPicture.get(x - 1, y);
+                Color rightRGBx = currentPicture.get(0, y);
+                xGradient = energyHelper(leftRGBx, rightRGBx);
+            } else {
+                Color rightRGBx = currentPicture.get(x + 1, y);
+                Color leftRGBx = currentPicture.get(x - 1, y);
+                xGradient = energyHelper(leftRGBx, rightRGBx);
+            }
         }
         //calculating y-gradient for all cases
-        if (y == 0) {
-            Color downRGBy = currentPicture.get(x, y + 1);
-            Color upRGBy = currentPicture.get(x, height() - 1);
-            yGradient = energyHelper(downRGBy, upRGBy);
-        } else if (y == height() - 1) {
-            Color upRGBy = currentPicture.get(x, y - 1);
-            Color downRGBy = currentPicture.get(x, 0);
-            yGradient = energyHelper(downRGBy, upRGBy);
-        } else {
-            Color downRGBy = currentPicture.get(x, y + 1);
-            Color upRGBy = currentPicture.get(x, y - 1);
-            yGradient = energyHelper(downRGBy, upRGBy);
+        if (height() == 1) {
+            yGradient = 0;
+        }
+        else {
+            if (y == 0) {
+                Color downRGBy = currentPicture.get(x, y + 1);
+                Color upRGBy = currentPicture.get(x, height() - 1);
+                yGradient = energyHelper(downRGBy, upRGBy);
+            } else if (y == height() - 1) {
+                Color upRGBy = currentPicture.get(x, y - 1);
+                Color downRGBy = currentPicture.get(x, 0);
+                yGradient = energyHelper(downRGBy, upRGBy);
+            } else {
+                Color downRGBy = currentPicture.get(x, y + 1);
+                Color upRGBy = currentPicture.get(x, y - 1);
+                yGradient = energyHelper(downRGBy, upRGBy);
+            }
         }
 
 
@@ -77,9 +87,9 @@ public class SeamCarver {
     }
 
     private double energyHelper(Color a, Color b) {
-        double diffRed = Math.pow(Math.abs(a.getRed() - b.getRed()), 2);
-        double diffGreen = Math.pow(Math.abs(a.getGreen() - b.getGreen()), 2);
-        double diffBlue = Math.pow(Math.abs(a.getBlue() - b.getBlue()), 2);
+        double diffRed = (a.getRed() - b.getRed()) * (a.getRed() - b.getRed());
+        double diffGreen = (a.getGreen() - b.getGreen()) * (a.getGreen() - b.getGreen());
+        double diffBlue = (a.getBlue() - b.getBlue()) * (a.getBlue() - b.getBlue());
         double gradient = diffRed + diffGreen + diffBlue;
         return gradient;
     }
@@ -188,6 +198,7 @@ public class SeamCarver {
             throw new java.lang.IllegalArgumentException("Not a valid seam");
         }
         SeamRemover.removeVerticalSeam(currentPicture, seam);
+
     }
 
     public void removeHorizontalSeam(int[] seam) {
