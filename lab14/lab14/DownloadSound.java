@@ -1,6 +1,6 @@
 package lab14;
 
-import java.util.ArrayList;
+//import java.util.ArrayList;
 import java.util.stream.Collectors;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -98,7 +98,7 @@ public class DownloadSound {
         return output;
     }
 
-	public static void main(String[] args) {
+    public static void main(String[] args) {
         if (args.length < 1 || args.length > 1) {
             System.out.println("ERROR: Please provide a sound URL");
             System.exit(1);
@@ -109,5 +109,5 @@ public class DownloadSound {
         String code = readCode(TMP_NAME);
         String className = parseClassName(code);
         saveCode(className, code);
-	}
+    }
 }
